@@ -32,13 +32,13 @@ button:focus {
 =                  Header                     =
 =============================================*/
 #header {
-    background-image: url('../img/headerImage.jpg');
+    background-image: url('../img/4.png');
     background-size: cover;
     background-position-x: center;
     background-position-y: center;
     /* 讓圖片固定在後方 */
     background-attachment: fixed;
-    padding: 100px 0px;
+    padding: 200px 0px;
     /* filter: brightness(0.5); */
     position: relative;
     margin-bottom: 0px;

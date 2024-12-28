@@ -61,26 +61,46 @@
     </section>
 
     <script>
-        // 假設這是登入的用戶數據
-        const correctUsername = "ken";
-        const correctPassword = "890518";
+document.getElementById('loginForm').addEventListener('submit', async function (event) {
+    event.preventDefault(); // 阻止表單默認提交
 
-        // 當表單提交時
-        $("#loginForm").submit(function(event) {
-            event.preventDefault(); // 阻止表單的默認提交行為
+    // 獲取用戶輸入的帳號和密碼
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
 
-            const username = $("#username").val();
-            const password = $("#password").val();
-
-            // 檢查登入資料是否正確
-            if (username === correctUsername && password === correctPassword) {
-                // 登入成功後跳轉到新頁面
-                window.location.href = "./shopping.html"; // 這裡是你想跳轉的頁面
-            } else {
-                alert("帳號或密碼錯誤！");
-            }
+    try {
+        // 發送 POST 請求到後端
+        const response = await fetch('http://localhost:8080/api/auth/login', {
+            method: 'POST', // HTTP 方法
+            headers: {
+                'Content-Type': 'application/json', // 設定請求為 JSON 格式
+            },
+            body: JSON.stringify({ username, password }), // 傳遞用戶輸入數據
         });
-    </script>
+
+        if (response.ok) {
+            // 後端返回 200 成功狀態
+            const data = await response.json();
+            alert(`Login successful! Welcome, ${data.username}`);
+            console.log('Token:', data.token);
+
+            // 存儲令牌 (選擇性，用於後續 API 認證)
+            localStorage.setItem('authToken', data.token);
+
+            // 跳轉到首頁或其他頁面
+            window.location.href = './shopping.html';
+
+        } else {
+            // 處理登入失敗情況
+            const error = await response.json();
+            alert(`Login failed: ${error.message || 'Invalid username or password'}`);
+        }
+    } catch (err) {
+        console.error('Error:', err);
+        alert('An error occurred while logging in. Please try again later.');
+    }
+});
+</script>
 </body>
 
 </html>
