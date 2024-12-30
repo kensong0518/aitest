@@ -19,7 +19,8 @@ RUN cd ~ && git clone https://github.com/kensong0518/aitest.git
 RUN cp -r ~/aitest/前端/* /var/www/html/
 
 # 開放 Nginx 默認端口 80
-EXPOSE 80
+EXPOSE 80  
+
 
 # 啟動 Nginx 伺服器
 CMD ["nginx", "-g", "daemon off;"]
