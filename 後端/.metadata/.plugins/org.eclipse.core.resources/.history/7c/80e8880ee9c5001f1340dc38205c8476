@@ -1,0 +1,37 @@
+package main.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.cors().configurationSource(corsConfigurationSource()).and()  // 使用自定义的 CORS 配置
+            .csrf().disable()  // 禁用 CSRF 防护，避免与 CORS 冲突
+            .authorizeRequests()
+            .antMatchers("/api/auth/**").permitAll()  // 允许所有用户访问 /api/auth 路径
+            .anyRequest().authenticated();  // 其他请求需要认证
+    }
+
+    // 配置 CORS 策略
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("http://localhost:8080/api/auth/login");  // 允许前端的 URL（确保前端运行的地址）
+        configuration.addAllowedMethod("*");  // 允许所有请求方法
+        configuration.addAllowedHeader("*");  // 允许所有请求头
+        configuration.setAllowCredentials(true);  // 允许凭证
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);  // 配置应用于所有路径
+        return source;
+    }
+}

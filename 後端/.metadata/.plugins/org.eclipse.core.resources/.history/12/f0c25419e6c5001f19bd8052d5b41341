@@ -1,0 +1,39 @@
+package main.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import main.dto.LoginRequest;
+import main.dto.LoginResponse;
+import main.service.AuthService;
+
+@RestController
+@RequestMapping("/api/auth")
+// 設置 CORS 配置，允許來自 http://127.0.0.1:5500 的請求
+@CrossOrigin(origins = "http://127.0.0.1:5500", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
+public class AuthController {
+
+    @Autowired
+    private AuthService authService;
+
+    // 註冊用戶
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@RequestBody LoginRequest loginRequest) {
+        // 調用 authService 註冊用戶
+        authService.registerUser(loginRequest.getUsername(), loginRequest.getPassword());
+        return ResponseEntity.ok("User registered successfully");
+    }
+
+    // 用戶登錄
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+        // 調用 authService 進行登錄並返回登錄結果
+        return ResponseEntity.ok(authService.login(loginRequest));
+    }
+}

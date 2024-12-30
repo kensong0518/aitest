@@ -1,0 +1,12 @@
+package main.dto;
+
+public class LoginResponse {
+
+
+	public LoginResponse(String token2) {
+		// TODO Auto-generated constructor stub
+	}
+
+
+	private String token;
+}

@@ -1,0 +1,33 @@
+package main.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.cors().and()  // 启用 CORS
+            .csrf().disable()  // 禁用 CSRF 防护，避免与 CORS 冲突
+            .authorizeRequests()
+            .antMatchers("/api/auth/**").permitAll()  // 允许所有用户访问 /api/auth 路径
+            .anyRequest().authenticated();  // 其他请求需要认证
+    }
+
+    // 配置 CORS 策略
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("http://localhost:5500")  // 允许来自前端服务器的请求
+                .allowedMethods("GET", "POST", "PUT", "DELETE")  // 允许的请求方法
+                .allowedHeaders("*")  // 允许的请求头
+                .allowCredentials(true);  // 允许携带凭证
+    }
+}

@@ -1,0 +1,30 @@
+package main.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.cors().and()  // 启用 CORS 支持
+            .csrf().disable()  // 禁用 CSRF 防护（如果你不需要它，通常可以禁用）
+            .authorizeRequests()
+            .antMatchers("/api/auth/**").permitAll()  // 允许所有用户访问 /api/auth 路径
+            .anyRequest().authenticated();  // 其他请求需要认证
+
+        // 你还可以根据需要添加更多的安全配置
+    }
+}

@@ -1,0 +1,36 @@
+package main.model;
+
+@Entity
+@Table(name = "user")
+@Data
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
+    private String username;
+
+    @Column(nullable = false)
+    private String password;
+
+	public void setUsername(String username2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setPassword(String encode) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setUsername(String username2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setUsername(String username2) {
+		// TODO Auto-generated method stub
+		
+	}
+}

@@ -1,0 +1,5 @@
+1735195193094	Delete element
+1735195239777	Move ' SecurityConfig.java' to 'config'
+1735195254865	Move ' AuthController.java' to ' controller'
+1735195318903	Rename resource ' controller'
+1735195344082	Move 'model' to 'main'
