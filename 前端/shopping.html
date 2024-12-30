@@ -60,7 +60,7 @@
             <!-- 商品 1 -->
             <div class="col-md-4">
                 <div class="card">
-                    <img class="card-img-top" src="img/1.png" alt="商品圖片" id="">
+                    <img class="card-img-top" src="img/1.png" alt="商品圖片" id=""/>
                     <div class="card-body">
                         <h5 class="card-title">KOBE 11 ELITE LOW BLACK</h5>
                         <p class="card-text">價格：$40000</p>
@@ -72,7 +72,7 @@
             <!-- 商品 2 -->
             <div class="col-md-4">
                 <div class="card">
-                    <img class="card-img-top" src="img/2.png" alt="商品圖片" id="">
+                    <img class="card-img-top" src="img/2.png" alt="商品圖片" id=""/>
                     <div class="card-body">
                         <h5 class="card-title">KOBE 6 PROTRO MAMBACITA</h5>
                         <p class="card-text">價格：$15800</p>
@@ -84,7 +84,7 @@
             <!-- 商品 3 -->
             <div class="col-md-4">
                 <div class="card">
-                    <img class="card-img-top" src="img/3.png" alt="商品圖片" id="">
+                    <img class="card-img-top" src="img/3.png" alt="商品圖片" id=""/>
                     <div class="card-body">
                         <h5 class="card-title">KOBE 6 PROTRO POP WHITE</h5>
                         <p class="card-text">價格：$15000</p>
@@ -94,7 +94,6 @@
             </div>
         </div>
     </section>
-    
 
     <!-- 購物車 -->
     <section class="container py-5">
@@ -193,7 +192,11 @@
 
         // 結帳按鈕
         $("#checkout-btn").click(function() {
-            alert("結帳功能尚未實作");
+            // 儲存購物車到 localStorage
+            localStorage.setItem("cart", JSON.stringify(cart));
+            
+            // 跳轉到結帳頁面
+            window.location.href = "checkout.html";
         });
     </script>
 </body>

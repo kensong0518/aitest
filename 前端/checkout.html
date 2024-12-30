@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>結帳頁面</title>
+    <link rel="icon shortcut" href="./img/favicon.ico">
+    <link rel="stylesheet" href="./css/bootstrap.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <!-- navbar -->
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="#">結帳頁面</a>
+        <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId"
+            aria-controls="collapsibleNavId" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </nav>
+
+    <!-- header -->
+    <header class="jumbotron bg-dark text-white text-center">
+        <div class="container">
+            <h1>確認您的訂單</h1>
+        </div>
+    </header>
+
+    <!-- 訂單內容 -->
+    <section class="container py-5">
+        <h2>訂單詳情</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered" id="order-table">
+                <thead>
+                    <tr>
+                        <th>商品名稱</th>
+                        <th>價格</th>
+                        <th>數量</th>
+                        <th>小計</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 訂單項目將會動態生成 -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 訂購人填表單 -->
+        <h3>填寫訂購人資料</h3>
+        <form id="order-form">
+            <div class="form-group">
+                <label for="customer-name">姓名</label>
+                <input type="text" class="form-control" id="customer-name" required>
+            </div>
+            <div class="form-group">
+                <label for="customer-email">電子郵件</label>
+                <input type="email" class="form-control" id="customer-email" required>
+            </div>
+            <div class="form-group">
+                <label for="customer-phone">電話號碼</label>
+                <input type="text" class="form-control" id="customer-phone" required>
+            </div>
+            <div class="form-group">
+                <label for="customer-address">送貨地址</label>
+                <textarea class="form-control" id="customer-address" rows="3" required></textarea>
+            </div>
+        </form>
+        
+        <div class="text-right">
+            <h4>總金額：$<span id="total-price">0</span></h4>
+            <button class="btn btn-success" id="submit-order">提交訂單</button>
+        </div>
+    </section>
+
+    <!-- 錯誤檢查提示 -->
+    <div class="modal" tabindex="-1" role="dialog" id="error-modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">表單錯誤</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="error-message"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+                    <button type="button" class="btn btn-primary" id="retry-button">重試</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            let totalPrice = 0;
+
+            // 顯示訂單內容
+            if (cart.length === 0) {
+                $("#order-table tbody").html('<tr><td colspan="4" class="text-center">您的購物車是空的。</td></tr>');
+                $("#total-price").text('0');
+            } else {
+                cart.forEach(item => {
+                    let subtotal = item.price * item.quantity;
+                    totalPrice += subtotal;
+                    $("#order-table tbody").append(`
+                        <tr>
+                            <td>${item.name}</td>
+                            <td>$${item.price}</td>
+                            <td>${item.quantity}</td>
+                            <td>$${subtotal}</td>
+                        </tr>
+                    `);
+                });
+                $("#total-price").text(totalPrice);
+            }
+
+            // 提交訂單
+            $("#submit-order").click(function() {
+                let name = $("#customer-name").val().trim();
+                let email = $("#customer-email").val().trim();
+                let phone = $("#customer-phone").val().trim();
+                let address = $("#customer-address").val().trim();
+
+                // 簡單的驗證
+                if (!name || !email || !phone || !address) {
+                    let errorMsg = "請填寫所有欄位！";
+                    $("#error-message").text(errorMsg);
+                    $("#error-modal").modal('show');
+                } else {
+                    // 這裡可以加入訂單提交的邏輯（例如提交到後端）
+                    alert("您的訂單已提交！");
+                    localStorage.removeItem("cart");
+                    window.location.href = "shopping.html"; // 或者跳轉到其他頁面
+                }
+            });
+
+            // 重試按鈕
+            $("#retry-button").click(function() {
+                $("#error-modal").modal('hide');
+            });
+        });
+    </script>
+</body>
+
+</html>
